@@ -19,9 +19,9 @@ import { NavLink } from "react-router-dom"
 const menuItems = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "User", to: "#", icon: Users },
-  { label: "Hub", to: "#", icon: Building2 },
-  { label: "Kategori", to: "#", icon: Tags },
-  { label: "Shift", to: "#", icon: CalendarClock },
+  { label: "Hub", to: "/hubs", icon: Building2 },
+  { label: "Kategori", to: "/categories", icon: Tags },
+  { label: "Shift", to: "/shifts", icon: CalendarClock },
   { label: "Supplier", to: "#", icon: Factory },
   { label: "Produk", to: "#", icon: Package },
   { label: "Inventaris", to: "#", icon: Boxes },

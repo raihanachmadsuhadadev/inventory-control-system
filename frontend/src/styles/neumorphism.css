@@ -608,6 +608,130 @@ a {
   padding: 6px 10px;
 }
 
+.master-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.master-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.search-field {
+  display: flex;
+  width: min(420px, 100%);
+  min-height: 48px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 17px;
+  color: var(--neo-muted);
+  background: var(--neo-surface);
+  box-shadow: var(--neo-shadow-inset);
+  padding: 0 15px;
+}
+
+.search-field input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: var(--neo-text);
+  background: transparent;
+}
+
+.readonly-note {
+  border-radius: 999px;
+  color: var(--neo-muted);
+  background: rgba(255, 255, 255, 0.42);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 8px 12px;
+}
+
+.empty-state {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+  border-radius: 18px;
+  color: var(--neo-muted);
+  background: rgba(255, 255, 255, 0.28);
+  font-weight: 800;
+  text-align: center;
+}
+
+.master-table td {
+  vertical-align: middle;
+}
+
+.table-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.table-actions button,
+.form-heading button {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--neo-primary);
+  background: var(--neo-surface);
+  box-shadow: var(--neo-shadow-soft);
+  cursor: pointer;
+}
+
+.table-actions button:last-child {
+  color: var(--neo-danger);
+}
+
+.master-form-card {
+  max-width: 760px;
+}
+
+.form-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.master-form {
+  display: grid;
+  gap: 18px;
+}
+
+.textarea-input {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.toggle-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--neo-text);
+  font-weight: 800;
+}
+
+.toggle-field input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--neo-primary);
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 4px;
+}
+
 @media (max-width: 1100px) {
   .summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -686,6 +810,16 @@ a {
   .summary-grid,
   .sidebar-nav {
     grid-template-columns: 1fr;
+  }
+
+  .master-toolbar,
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .search-field {
+    width: 100%;
   }
 
   .neo-card {

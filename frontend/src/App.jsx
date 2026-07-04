@@ -1,8 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import ProtectedRoute from "./components/auth/ProtectedRoute"
 import { useAuth } from "./context/AuthContext"
+import Categories from "./pages/Categories"
 import Dashboard from "./pages/Dashboard"
+import Hubs from "./pages/Hubs"
 import Login from "./pages/Login"
+import Shifts from "./pages/Shifts"
 
 function App() {
   const { isAuthenticated, loading } = useAuth()
@@ -29,6 +32,30 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/categories"
+        element={
+          <ProtectedRoute>
+            <Categories />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hubs"
+        element={
+          <ProtectedRoute>
+            <Hubs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/shifts"
+        element={
+          <ProtectedRoute>
+            <Shifts />
           </ProtectedRoute>
         }
       />
