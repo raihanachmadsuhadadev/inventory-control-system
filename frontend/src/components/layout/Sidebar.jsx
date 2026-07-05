@@ -26,8 +26,8 @@ const menuItems = [
   { label: "Produk", to: "/products", icon: Package },
   { label: "Inventaris", to: "/inventories", icon: Boxes },
   { label: "Transaksi Stok", to: "/stock-transactions", icon: Repeat },
-  { label: "EOQ", to: "#", icon: BarChart3 },
-  { label: "ROP", to: "#", icon: Gauge },
+  { label: "EOQ", to: "/eoq", icon: BarChart3 },
+  { label: "ROP", to: "/rop", icon: Gauge },
   { label: "Rekomendasi", to: "#", icon: Lightbulb },
   { label: "Laporan", to: "#", icon: FileText },
 ]

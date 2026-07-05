@@ -655,6 +655,41 @@ a {
   width: min(260px, 100%);
 }
 
+.calculation-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.8fr) minmax(280px, 0.6fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.result-card {
+  display: grid;
+  min-height: 220px;
+  align-content: center;
+  justify-items: start;
+  gap: 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: var(--neo-shadow-inset);
+  padding: 24px;
+}
+
+.result-card span {
+  color: var(--neo-muted);
+  font-weight: 800;
+}
+
+.result-card strong {
+  color: var(--neo-primary);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1;
+}
+
+.result-card p {
+  color: var(--neo-muted);
+  font-weight: 700;
+}
+
 .empty-state {
   display: grid;
   min-height: 160px;
@@ -742,6 +777,10 @@ a {
   }
 
   .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calculation-grid {
     grid-template-columns: 1fr;
   }
 }

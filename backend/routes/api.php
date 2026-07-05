@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\EoqCalculationController;
 use App\Http\Controllers\Api\HubController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\RopCalculationController;
 use App\Http\Controllers\Api\ShiftController;
 use App\Http\Controllers\Api\StockTransactionController;
 use App\Http\Controllers\Api\SupplierController;
@@ -35,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function (): void {
         Route::get('/inventories/{inventory}', [InventoryController::class, 'show']);
         Route::get('/stock-transactions', [StockTransactionController::class, 'index']);
         Route::get('/stock-transactions/{stockTransaction}', [StockTransactionController::class, 'show']);
+        Route::get('/eoq-calculations', [EoqCalculationController::class, 'index']);
+        Route::get('/eoq-calculations/{eoqCalculation}', [EoqCalculationController::class, 'show']);
+        Route::get('/rop-calculations', [RopCalculationController::class, 'index']);
+        Route::get('/rop-calculations/{ropCalculation}', [RopCalculationController::class, 'show']);
     });
 
     Route::middleware('role:super_admin')->group(function (): void {
@@ -57,5 +63,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
         Route::put('/products/{product}', [ProductController::class, 'update']);
         Route::delete('/products/{product}', [ProductController::class, 'destroy']);
         Route::post('/stock-transactions', [StockTransactionController::class, 'store']);
+        Route::post('/eoq-calculations', [EoqCalculationController::class, 'store']);
+        Route::post('/rop-calculations', [RopCalculationController::class, 'store']);
     });
 });
