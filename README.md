@@ -189,22 +189,33 @@ inventory-eoq-rop/
 
 ## Screenshots
 
-Screenshot aplikasi tersedia di folder `docs/screenshots`.
+Beberapa tampilan utama aplikasi ditampilkan di bawah ini. Screenshot lengkap tersedia di folder `docs/screenshots`.
 
-### Preview Utama
+### Login Page
 
-| No | Tampilan | File |
-|---:|---|---|
-| 1 | Login Page | [01-login-page.png](./docs/screenshots/01-login-page.png) |
-| 2 | Dashboard | [02-dashboard.png](./docs/screenshots/02-dashboard.png) |
-| 3 | Product Management | [06-products-table.png](./docs/screenshots/06-products-table.png) |
-| 4 | Product Modal | [07-product-modal.png](./docs/screenshots/07-product-modal.png) |
-| 5 | Inventory Table | [10-inventories-table.png](./docs/screenshots/10-inventories-table.png) |
-| 6 | EOQ Calculation | [12-eoq-calculation.png](./docs/screenshots/12-eoq-calculation.png) |
-| 7 | ROP Calculation | [13-rop-calculation.png](./docs/screenshots/13-rop-calculation.png) |
-| 8 | Purchase Recommendations | [14-purchase-recommendations.png](./docs/screenshots/14-purchase-recommendations.png) |
-| 9 | Inventory Report | [15-inventory-report.png](./docs/screenshots/15-inventory-report.png) |
-| 10 | Import Excel Modal | [16-import-excel-modal.png](./docs/screenshots/16-import-excel-modal.png) |
+![Login Page](./docs/screenshots/01-login-page.png)
+
+### Dashboard
+
+![Dashboard](./docs/screenshots/02-dashboard.png)
+
+### Product Management
+
+![Product Management](./docs/screenshots/06-products-table.png)
+
+### EOQ Calculation
+
+![EOQ Calculation](./docs/screenshots/12-eoq-calculation.png)
+
+### ROP Calculation
+
+![ROP Calculation](./docs/screenshots/13-rop-calculation.png)
+
+### Purchase Recommendations
+
+![Purchase Recommendations](./docs/screenshots/14-purchase-recommendations.png)
+
+---
 
 ### Screenshot Lengkap
 
