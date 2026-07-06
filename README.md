@@ -189,59 +189,60 @@ inventory-eoq-rop/
 
 ## Screenshots
 
+Beberapa tampilan utama aplikasi ditampilkan di bawah ini. Screenshot lengkap tersedia di folder `docs/screenshots`.
+
 ### Login Page
-![Login Page](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/01-login-page.png)
+
+![Login Page](./docs/screenshots/01-login-page.png)
 
 ### Dashboard
-![Dashboard](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/02-dashboard.png)
 
-### Sidebar Super Admin
-![Sidebar Super Admin](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/03-sidebar-super-admin.png)
-
-### Sidebar Admin Gudang
-![Sidebar Admin Gudang](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/04-sidebar-admin-gudang.png)
-
-### Sidebar Manager Gudang
-![Sidebar Manager Gudang](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/05-sidebar-manager-gudang.png)
+![Dashboard](./docs/screenshots/02-dashboard.png)
 
 ### Product Management
-![Product Management](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/06-products-table.png)
+
+![Product Management](./docs/screenshots/06-products-table.png)
 
 ### Product Modal
-![Product Modal](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/07-product-modal.png)
 
-### Product Detail
-![Product Detail](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/08-product-detail.png)
-
-### Supplier Management
-![Supplier Management](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/09-suppliers-table.png)
+![Product Modal](./docs/screenshots/07-product-modal.png)
 
 ### Inventory Table
-![Inventory Table](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/10-inventories-table.png)
 
-### Stock Transactions
-![Stock Transactions](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/11-stock-transactions.png)
+![Inventory Table](./docs/screenshots/10-inventories-table.png)
 
 ### EOQ Calculation
-![EOQ Calculation](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/12-eoq-calculation.png)
+
+![EOQ Calculation](./docs/screenshots/12-eoq-calculation.png)
 
 ### ROP Calculation
-![ROP Calculation](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/13-rop-calculation.png)
+
+![ROP Calculation](./docs/screenshots/13-rop-calculation.png)
 
 ### Purchase Recommendations
-![Purchase Recommendations](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/14-purchase-recommendations.png)
+
+![Purchase Recommendations](./docs/screenshots/14-purchase-recommendations.png)
 
 ### Inventory Report
-![Inventory Report](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/15-inventory-report.png)
+
+![Inventory Report](./docs/screenshots/15-inventory-report.png)
 
 ### Import Excel Modal
-![Import Excel Modal](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/16-import-excel-modal.png)
 
-### Toast Notification
-![Toast Notification](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/17-toast-notification.png)
+![Import Excel Modal](./docs/screenshots/16-import-excel-modal.png)
 
-### Confirm Delete
-![Confirm Delete](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/18-confirm-delete.png)
+---
+
+### Screenshot Lengkap
+
+- [Sidebar Super Admin](./docs/screenshots/03-sidebar-super-admin.png)
+- [Sidebar Admin Gudang](./docs/screenshots/04-sidebar-admin-gudang.png)
+- [Sidebar Manager Gudang](./docs/screenshots/05-sidebar-manager-gudang.png)
+- [Product Detail](./docs/screenshots/08-product-detail.png)
+- [Supplier Management](./docs/screenshots/09-suppliers-table.png)
+- [Stock Transactions](./docs/screenshots/11-stock-transactions.png)
+- [Toast Notification](./docs/screenshots/17-toast-notification.png)
+- [Confirm Delete](./docs/screenshots/18-confirm-delete.png)
 
 ## Persiapan Environment
 
