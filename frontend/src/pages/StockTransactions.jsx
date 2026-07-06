@@ -1,9 +1,12 @@
-import { Plus, Search } from "lucide-react"
+import { Eye, Plus, Search, Upload } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
+import ImportModal from "../components/ui/ImportModal"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import NeumorphicInput from "../components/ui/NeumorphicInput"
 import { useAuth } from "../context/AuthContext"
+import { useToast } from "../context/ToastContext"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -26,13 +29,16 @@ function typeLabel(type) {
 }
 
 function StockTransactions() {
+  const navigate = useNavigate()
   const { user } = useAuth()
+  const { showToast } = useToast()
   const canCreate = ["super_admin", "admin_gudang"].includes(user?.role?.slug)
   const [transactions, setTransactions] = useState([])
   const [products, setProducts] = useState([])
   const [hubs, setHubs] = useState([])
   const [form, setForm] = useState(initialForm)
   const [formVisible, setFormVisible] = useState(false)
+  const [importVisible, setImportVisible] = useState(false)
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -53,10 +59,11 @@ function StockTransactions() {
       setProducts(productResponse.data?.data || [])
       setHubs(hubResponse.data?.data || [])
     } catch (fetchError) {
-      setError(
+      const message =
         fetchError.response?.data?.message ||
-          "Gagal memuat data transaksi stok.",
-      )
+        "Gagal memuat data transaksi stok."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setLoading(false)
     }
@@ -108,6 +115,7 @@ function StockTransactions() {
 
       setForm(initialForm)
       setFormVisible(false)
+      showToast({ type: "success", message: "Transaksi stok berhasil disimpan." })
       await fetchData()
     } catch (saveError) {
       const validationErrors = saveError.response?.data?.errors
@@ -115,11 +123,12 @@ function StockTransactions() {
         ? Object.values(validationErrors).flat()[0]
         : null
 
-      setError(
+      const message =
         firstValidationError ||
-          saveError.response?.data?.message ||
-          "Gagal menyimpan transaksi stok.",
-      )
+        saveError.response?.data?.message ||
+        "Gagal menyimpan transaksi stok."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setSaving(false)
     }
@@ -136,13 +145,19 @@ function StockTransactions() {
           </p>
         </div>
         {canCreate ? (
-          <NeumorphicButton
-            variant="primary"
-            onClick={() => setFormVisible((visible) => !visible)}
-          >
-            <Plus size={18} />
-            Tambah Transaksi
-          </NeumorphicButton>
+          <div className="page-actions">
+            <NeumorphicButton onClick={() => setImportVisible(true)}>
+              <Upload size={18} />
+              Import Excel
+            </NeumorphicButton>
+            <NeumorphicButton
+              variant="primary"
+              onClick={() => setFormVisible((visible) => !visible)}
+            >
+              <Plus size={18} />
+              Tambah Transaksi
+            </NeumorphicButton>
+          </div>
         ) : null}
       </section>
 
@@ -304,6 +319,7 @@ function StockTransactions() {
                     <th>Stok Setelah</th>
                     <th>Catatan</th>
                     <th>Dibuat Oleh</th>
+                    <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -318,6 +334,13 @@ function StockTransactions() {
                       <td>{item.stock_after}</td>
                       <td>{item.notes || "-"}</td>
                       <td>{item.creator?.name || "-"}</td>
+                      <td>
+                        <div className="table-actions">
+                          <button type="button" onClick={() => navigate(`/stock-transactions/${item.id}`)}>
+                            <Eye size={16} />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -326,6 +349,15 @@ function StockTransactions() {
           )}
         </NeumorphicCard>
       </section>
+      {importVisible ? (
+        <ImportModal
+          title="Import Transaksi Stok"
+          templateUrl="/stock-transactions/template"
+          importUrl="/stock-transactions/import"
+          onClose={() => setImportVisible(false)}
+          onSuccess={fetchData}
+        />
+      ) : null}
     </AppLayout>
   )
 }

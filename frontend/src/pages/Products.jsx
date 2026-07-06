@@ -84,6 +84,9 @@ function Products() {
       title="Produk"
       subtitle="Kelola data produk, kategori, supplier, satuan, dan minimum stok."
       endpoint="/products"
+      detailBasePath="/products"
+      templateUrl="/products/template"
+      importUrl="/products/import"
       fields={fields}
       columns={columns}
       manageRoles={["super_admin", "admin_gudang"]}

@@ -5,6 +5,7 @@ import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import NeumorphicInput from "../components/ui/NeumorphicInput"
 import { useAuth } from "../context/AuthContext"
+import { useToast } from "../context/ToastContext"
 
 const demoAccounts = [
   "superadmin@inventory.test / password",
@@ -15,6 +16,7 @@ const demoAccounts = [
 function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
+  const { showToast } = useToast()
   const [email, setEmail] = useState("superadmin@inventory.test")
   const [password, setPassword] = useState("password")
   const [error, setError] = useState("")
@@ -27,12 +29,14 @@ function Login() {
 
     try {
       await login(email, password)
+      showToast({ type: "success", message: "Login berhasil." })
       navigate("/dashboard", { replace: true })
     } catch (loginError) {
-      setError(
+      const message =
         loginError.response?.data?.message ||
-          "Login gagal. Periksa koneksi API dan kredensial.",
-      )
+        "Login gagal. Periksa koneksi API dan kredensial."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setSubmitting(false)
     }

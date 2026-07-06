@@ -1,9 +1,11 @@
-import { Calculator, Search } from "lucide-react"
+import { Calculator, Eye, Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import NeumorphicInput from "../components/ui/NeumorphicInput"
 import { useAuth } from "../context/AuthContext"
+import { useToast } from "../context/ToastContext"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -19,7 +21,9 @@ function formatNumber(value) {
 }
 
 function Eoq() {
+  const navigate = useNavigate()
   const { user } = useAuth()
+  const { showToast } = useToast()
   const canCalculate = ["super_admin", "admin_gudang"].includes(user?.role?.slug)
   const [calculations, setCalculations] = useState([])
   const [products, setProducts] = useState([])
@@ -42,10 +46,11 @@ function Eoq() {
       setCalculations(calculationResponse.data?.data || [])
       setProducts(productResponse.data?.data || [])
     } catch (fetchError) {
-      setError(
+      const message =
         fetchError.response?.data?.message ||
-          "Gagal memuat data perhitungan EOQ.",
-      )
+        "Gagal memuat data perhitungan EOQ."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setLoading(false)
     }
@@ -89,6 +94,7 @@ function Eoq() {
 
       setLastResult(response.data?.data || null)
       setForm(initialForm)
+      showToast({ type: "success", message: "Perhitungan EOQ berhasil disimpan." })
       await fetchData()
     } catch (saveError) {
       const validationErrors = saveError.response?.data?.errors
@@ -96,11 +102,12 @@ function Eoq() {
         ? Object.values(validationErrors).flat()[0]
         : null
 
-      setError(
+      const message =
         firstValidationError ||
-          saveError.response?.data?.message ||
-          "Gagal menghitung EOQ.",
-      )
+        saveError.response?.data?.message ||
+        "Gagal menghitung EOQ."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setSaving(false)
     }
@@ -245,6 +252,7 @@ function Eoq() {
                   <th>Biaya Penyimpanan</th>
                   <th>Hasil EOQ</th>
                   <th>Dihitung Oleh</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -257,6 +265,13 @@ function Eoq() {
                     <td>{formatNumber(item.holding_cost)}</td>
                     <td>{formatNumber(item.eoq_result)}</td>
                     <td>{item.calculator?.name || "-"}</td>
+                    <td>
+                      <div className="table-actions">
+                        <button type="button" onClick={() => navigate(`/eoq/${item.id}`)}>
+                          <Eye size={16} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

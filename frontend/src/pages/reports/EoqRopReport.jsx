@@ -1,6 +1,7 @@
 import { Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import NeumorphicCard from "../../components/ui/NeumorphicCard"
+import { useToast } from "../../context/ToastContext"
 import AppLayout from "../../layouts/AppLayout"
 import api from "../../lib/api"
 
@@ -29,6 +30,7 @@ function formatDate(value) {
 }
 
 function EoqRopReport() {
+  const { showToast } = useToast()
   const [rows, setRows] = useState([])
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
@@ -42,10 +44,11 @@ function EoqRopReport() {
         const response = await api.get("/reports/eoq-rop")
         setRows(response.data?.data || [])
       } catch (fetchError) {
-        setError(
+        const message =
           fetchError.response?.data?.message ||
-            "Gagal memuat laporan EOQ & ROP.",
-        )
+          "Gagal memuat laporan EOQ & ROP."
+        setError(message)
+        showToast({ type: "error", message })
       } finally {
         setLoading(false)
       }

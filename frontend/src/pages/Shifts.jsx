@@ -23,6 +23,9 @@ function Shifts() {
       title="Shift"
       subtitle="Kelola jadwal kerja untuk operasional gudang."
       endpoint="/shifts"
+      detailBasePath="/shifts"
+      templateUrl="/shifts/template"
+      importUrl="/shifts/import"
       fields={fields}
       columns={columns}
     />

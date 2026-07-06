@@ -21,6 +21,9 @@ function Hubs() {
       title="Hub"
       subtitle="Kelola lokasi gudang atau titik distribusi inventaris."
       endpoint="/hubs"
+      detailBasePath="/hubs"
+      templateUrl="/hubs/template"
+      importUrl="/hubs/import"
       fields={fields}
       columns={columns}
     />

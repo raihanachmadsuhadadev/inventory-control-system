@@ -19,6 +19,9 @@ function Categories() {
       title="Kategori"
       subtitle="Kelola pengelompokan barang untuk produk dan inventaris."
       endpoint="/categories"
+      detailBasePath="/categories"
+      templateUrl="/categories/template"
+      importUrl="/categories/import"
       fields={fields}
       columns={columns}
     />

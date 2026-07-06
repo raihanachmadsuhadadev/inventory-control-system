@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\EoqCalculationController;
 use App\Http\Controllers\Api\HubController;
+use App\Http\Controllers\Api\ImportExport\ImportExportController;
 use App\Http\Controllers\Api\InventoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PurchaseRecommendationController;
@@ -25,6 +26,26 @@ Route::prefix('auth')->group(function (): void {
 });
 
 Route::middleware('auth:sanctum')->group(function (): void {
+    Route::middleware('role:super_admin')->group(function (): void {
+        Route::get('/users/template', [ImportExportController::class, 'template'])->defaults('type', 'users');
+        Route::post('/users/import', [ImportExportController::class, 'import'])->defaults('type', 'users');
+        Route::get('/hubs/template', [ImportExportController::class, 'template'])->defaults('type', 'hubs');
+        Route::post('/hubs/import', [ImportExportController::class, 'import'])->defaults('type', 'hubs');
+        Route::get('/categories/template', [ImportExportController::class, 'template'])->defaults('type', 'categories');
+        Route::post('/categories/import', [ImportExportController::class, 'import'])->defaults('type', 'categories');
+        Route::get('/shifts/template', [ImportExportController::class, 'template'])->defaults('type', 'shifts');
+        Route::post('/shifts/import', [ImportExportController::class, 'import'])->defaults('type', 'shifts');
+    });
+
+    Route::middleware('role:super_admin,admin_gudang')->group(function (): void {
+        Route::get('/suppliers/template', [ImportExportController::class, 'template'])->defaults('type', 'suppliers');
+        Route::post('/suppliers/import', [ImportExportController::class, 'import'])->defaults('type', 'suppliers');
+        Route::get('/products/template', [ImportExportController::class, 'template'])->defaults('type', 'products');
+        Route::post('/products/import', [ImportExportController::class, 'import'])->defaults('type', 'products');
+        Route::get('/stock-transactions/template', [ImportExportController::class, 'template'])->defaults('type', 'stock-transactions');
+        Route::post('/stock-transactions/import', [ImportExportController::class, 'import'])->defaults('type', 'stock-transactions');
+    });
+
     Route::middleware('role:super_admin,admin_gudang,manager_gudang')->group(function (): void {
         Route::get('/categories', [CategoryController::class, 'index']);
         Route::get('/categories/{category}', [CategoryController::class, 'show']);

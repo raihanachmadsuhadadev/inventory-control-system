@@ -1,6 +1,8 @@
-import { Search } from "lucide-react"
+import { Eye, Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
+import { useToast } from "../context/ToastContext"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -11,6 +13,8 @@ function stockStatus(item) {
 }
 
 function Inventories() {
+  const navigate = useNavigate()
+  const { showToast } = useToast()
   const [inventories, setInventories] = useState([])
   const [hubs, setHubs] = useState([])
   const [search, setSearch] = useState("")
@@ -31,9 +35,10 @@ function Inventories() {
         setInventories(inventoryResponse.data?.data || [])
         setHubs(hubResponse.data?.data || [])
       } catch (fetchError) {
-        setError(
-          fetchError.response?.data?.message || "Gagal memuat data inventaris.",
-        )
+        const message =
+          fetchError.response?.data?.message || "Gagal memuat data inventaris."
+        setError(message)
+        showToast({ type: "error", message })
       } finally {
         setLoading(false)
       }
@@ -118,6 +123,7 @@ function Inventories() {
                   <th>Available Stock</th>
                   <th>Status</th>
                   <th>Update Terakhir</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,6 +152,13 @@ function Inventories() {
                         {item.last_updated_at
                           ? new Date(item.last_updated_at).toLocaleString("id-ID")
                           : "-"}
+                      </td>
+                      <td>
+                        <div className="table-actions">
+                          <button type="button" onClick={() => navigate(`/inventories/${item.id}`)}>
+                            <Eye size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )

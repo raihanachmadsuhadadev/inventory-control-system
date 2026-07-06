@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
+import { useToast } from "../context/ToastContext"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -29,6 +30,7 @@ function formatNumber(value) {
 
 function Dashboard() {
   const navigate = useNavigate()
+  const { showToast } = useToast()
   const [summary, setSummary] = useState({})
   const [criticalStocks, setCriticalStocks] = useState([])
   const [recommendations, setRecommendations] = useState([])
@@ -51,10 +53,11 @@ function Dashboard() {
         setCriticalStocks(criticalResponse.data?.data || [])
         setRecommendations(reorderResponse.data?.data || [])
       } catch (fetchError) {
-        setError(
+        const message =
           fetchError.response?.data?.message ||
-            "Gagal memuat ringkasan dashboard.",
-        )
+          "Gagal memuat ringkasan dashboard."
+        setError(message)
+        showToast({ type: "error", message })
       } finally {
         setLoading(false)
       }

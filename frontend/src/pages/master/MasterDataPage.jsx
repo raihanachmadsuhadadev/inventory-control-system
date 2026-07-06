@@ -1,8 +1,13 @@
-import { Edit2, Plus, Search, Trash2, X } from "lucide-react"
+import { Edit2, Eye, Plus, Search, Trash2, Upload } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import AppLayout from "../../layouts/AppLayout"
 import api from "../../lib/api"
 import { useAuth } from "../../context/AuthContext"
+import { useToast } from "../../context/ToastContext"
+import ConfirmDialog from "../../components/ui/ConfirmDialog"
+import ImportModal from "../../components/ui/ImportModal"
+import Modal from "../../components/ui/Modal"
 import NeumorphicButton from "../../components/ui/NeumorphicButton"
 import NeumorphicCard from "../../components/ui/NeumorphicCard"
 import NeumorphicInput from "../../components/ui/NeumorphicInput"
@@ -16,6 +21,13 @@ const emptyForm = (fields) =>
     {},
   )
 
+const fullWidthFieldNames = ["description", "address", "notes"]
+
+const fieldClassName = (field) =>
+  fullWidthFieldNames.includes(field.name) || field.fullWidth
+    ? "field modal-form-field-full"
+    : "field"
+
 function MasterDataPage({
   title,
   subtitle,
@@ -23,9 +35,14 @@ function MasterDataPage({
   fields,
   columns,
   manageRoles = ["super_admin"],
+  detailBasePath,
+  templateUrl,
+  importUrl,
 })
 {
+  const navigate = useNavigate()
   const { user } = useAuth()
+  const { showToast } = useToast()
   const canManage = manageRoles.includes(user?.role?.slug)
   const [items, setItems] = useState([])
   const [form, setForm] = useState(() => emptyForm(fields))
@@ -33,8 +50,12 @@ function MasterDataPage({
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState("")
   const [formVisible, setFormVisible] = useState(false)
+  const [importVisible, setImportVisible] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const canImport = canManage && templateUrl && importUrl
 
   const filteredItems = useMemo(() => {
     const keyword = search.toLowerCase().trim()
@@ -61,10 +82,11 @@ function MasterDataPage({
       const response = await api.get(endpoint)
       setItems(response.data?.data || [])
     } catch (fetchError) {
-      setError(
+      const message =
         fetchError.response?.data?.message ||
-          `Gagal memuat data ${title.toLowerCase()}.`,
-      )
+        `Gagal memuat data ${title.toLowerCase()}.`
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setLoading(false)
     }
@@ -117,10 +139,42 @@ function MasterDataPage({
     }))
   }
 
+  const validateForm = () => {
+    for (const field of fields) {
+      const value = form[field.name]
+
+      if (field.required && (value === "" || value === null || value === undefined)) {
+        return `${field.label} wajib diisi.`
+      }
+
+      if (field.type === "number" && value !== "" && Number(value) < 0) {
+        return `${field.label} tidak boleh negatif.`
+      }
+
+      if (
+        field.type === "email" &&
+        value &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+      ) {
+        return "Format email tidak valid."
+      }
+    }
+
+    return ""
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
 
     if (!canManage) {
+      return
+    }
+
+    const validationMessage = validateForm()
+
+    if (validationMessage) {
+      setError(validationMessage)
+      showToast({ type: "warning", message: validationMessage })
       return
     }
 
@@ -143,8 +197,10 @@ function MasterDataPage({
 
       if (editingItem) {
         await api.put(`${endpoint}/${editingItem.id}`, payload)
+        showToast({ type: "success", message: "Data berhasil diperbarui." })
       } else {
         await api.post(endpoint, payload)
+        showToast({ type: "success", message: "Data berhasil ditambahkan." })
       }
 
       resetForm()
@@ -155,36 +211,41 @@ function MasterDataPage({
         ? Object.values(validationErrors).flat()[0]
         : null
 
-      setError(
+      const message =
         firstValidationError ||
-          saveError.response?.data?.message ||
-          `Gagal menyimpan data ${title.toLowerCase()}.`,
-      )
+        saveError.response?.data?.message ||
+        `Gagal menyimpan data ${title.toLowerCase()}.`
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setSaving(false)
     }
   }
 
-  const handleDelete = async (item) => {
+  const handleDelete = async () => {
     if (!canManage) {
       return
     }
 
-    const confirmed = window.confirm(`Hapus ${item.name}?`)
-
-    if (!confirmed) {
+    if (!deleteTarget) {
       return
     }
 
     try {
+      setDeleting(true)
       setError("")
-      await api.delete(`${endpoint}/${item.id}`)
+      await api.delete(`${endpoint}/${deleteTarget.id}`)
+      showToast({ type: "success", message: "Data berhasil dihapus." })
+      setDeleteTarget(null)
       await fetchItems()
     } catch (deleteError) {
-      setError(
+      const message =
         deleteError.response?.data?.message ||
-          `Gagal menghapus data ${title.toLowerCase()}.`,
-      )
+        `Gagal menghapus data ${title.toLowerCase()}.`
+      setError(message)
+      showToast({ type: "error", message })
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -197,10 +258,18 @@ function MasterDataPage({
           <p className="page-description">{subtitle}</p>
         </div>
         {canManage ? (
-          <NeumorphicButton variant="primary" onClick={openCreateForm}>
-            <Plus size={18} />
-            Tambah
-          </NeumorphicButton>
+          <div className="page-actions">
+            {canImport ? (
+              <NeumorphicButton onClick={() => setImportVisible(true)}>
+                <Upload size={18} />
+                Import Excel
+              </NeumorphicButton>
+            ) : null}
+            <NeumorphicButton variant="primary" onClick={openCreateForm}>
+              <Plus size={18} />
+              Tambah
+            </NeumorphicButton>
+          </div>
         ) : null}
       </section>
 
@@ -236,7 +305,7 @@ function MasterDataPage({
                       <th key={column.key}>{column.label}</th>
                     ))}
                     <th>Status</th>
-                    {canManage ? <th>Aksi</th> : null}
+                    <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -258,9 +327,19 @@ function MasterDataPage({
                           {item.is_active ? "Aktif" : "Nonaktif"}
                         </span>
                       </td>
-                      {canManage ? (
-                        <td>
-                          <div className="table-actions">
+                      <td>
+                        <div className="table-actions">
+                          {detailBasePath ? (
+                            <button
+                              aria-label={`Detail ${item.name}`}
+                              onClick={() => navigate(`${detailBasePath}/${item.id}`)}
+                              type="button"
+                            >
+                              <Eye size={16} />
+                            </button>
+                          ) : null}
+                          {canManage ? (
+                            <>
                             <button
                               aria-label={`Edit ${item.name}`}
                               onClick={() => openEditForm(item)}
@@ -270,14 +349,15 @@ function MasterDataPage({
                             </button>
                             <button
                               aria-label={`Hapus ${item.name}`}
-                              onClick={() => handleDelete(item)}
+                              onClick={() => setDeleteTarget(item)}
                               type="button"
                             >
                               <Trash2 size={16} />
                             </button>
-                          </div>
-                        </td>
-                      ) : null}
+                            </>
+                          ) : null}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -287,20 +367,8 @@ function MasterDataPage({
         </NeumorphicCard>
 
         {formVisible ? (
-          <NeumorphicCard className="master-form-card">
-            <div className="form-heading">
-              <div>
-                <h2 className="neo-card-title">
-                  {editingItem ? "Edit Data" : "Tambah Data"}
-                </h2>
-                <p className="neo-card-muted">{title}</p>
-              </div>
-              <button aria-label="Tutup form" onClick={resetForm} type="button">
-                <X size={18} />
-              </button>
-            </div>
-
-            <form className="master-form" onSubmit={handleSubmit}>
+          <Modal title={editingItem ? "Edit Data" : "Tambah Data"} onClose={resetForm}>
+            <form className="master-form modal-form-grid" onSubmit={handleSubmit}>
               {fields.map((field) =>
                 field.type === "checkbox" ? (
                   <label key={field.name} className="toggle-field">
@@ -314,7 +382,7 @@ function MasterDataPage({
                     <span>{field.label}</span>
                   </label>
                 ) : field.type === "select" ? (
-                  <div key={field.name} className="field">
+                  <div key={field.name} className={fieldClassName(field)}>
                     <label htmlFor={field.name}>{field.label}</label>
                     <select
                       id={field.name}
@@ -334,7 +402,7 @@ function MasterDataPage({
                     </select>
                   </div>
                 ) : field.type === "textarea" ? (
-                  <div key={field.name} className="field">
+                  <div key={field.name} className={fieldClassName(field)}>
                     <label htmlFor={field.name}>{field.label}</label>
                     <textarea
                       id={field.name}
@@ -362,7 +430,7 @@ function MasterDataPage({
                 ),
               )}
 
-              <div className="form-actions">
+              <div className="form-actions modal-form-field-full">
                 <NeumorphicButton type="button" onClick={resetForm}>
                   Batal
                 </NeumorphicButton>
@@ -375,9 +443,25 @@ function MasterDataPage({
                 </NeumorphicButton>
               </div>
             </form>
-          </NeumorphicCard>
+          </Modal>
         ) : null}
       </section>
+
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        loading={deleting}
+        onCancel={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+      />
+      {importVisible ? (
+        <ImportModal
+          title={`Import ${title}`}
+          templateUrl={templateUrl}
+          importUrl={importUrl}
+          onClose={() => setImportVisible(false)}
+          onSuccess={fetchItems}
+        />
+      ) : null}
     </AppLayout>
   )
 }

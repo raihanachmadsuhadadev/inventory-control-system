@@ -1,11 +1,14 @@
-import { Bell, LogOut, Search } from "lucide-react"
+import { Bell, ChevronDown, LogOut, Search } from "lucide-react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
-import NeumorphicButton from "../ui/NeumorphicButton"
+import { useToast } from "../../context/ToastContext"
 
 function Topbar() {
   const navigate = useNavigate()
   const { logout, user } = useAuth()
+  const { showToast } = useToast()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const roleName = user?.role?.name || "Tanpa role"
   const initials =
     user?.name
@@ -16,8 +19,13 @@ function Topbar() {
       .toUpperCase() || "U"
 
   const handleLogout = async () => {
-    await logout()
-    navigate("/login", { replace: true })
+    try {
+      await logout()
+      showToast({ type: "success", message: "Logout berhasil." })
+      navigate("/login", { replace: true })
+    } catch {
+      showToast({ type: "error", message: "Logout gagal." })
+    }
   }
 
   return (
@@ -34,19 +42,34 @@ function Topbar() {
         <div className="topbar-icon" aria-label="Notifikasi">
           <Bell size={19} />
         </div>
-        <div className="topbar-user">
-          <div className="user-avatar" aria-label={user?.name || "User"}>
-            {initials}
-          </div>
-          <div>
-            <p>{user?.name || "User"}</p>
-            <span>{roleName}</span>
-          </div>
+        <div className="user-menu">
+          <button
+            className="topbar-user"
+            type="button"
+            onClick={() => setDropdownOpen((open) => !open)}
+          >
+            <div className="user-avatar" aria-label={user?.name || "User"}>
+              {initials}
+            </div>
+            <div>
+              <p>{user?.name || "User"}</p>
+              <span>{roleName}</span>
+            </div>
+            <ChevronDown size={16} />
+          </button>
+
+          {dropdownOpen ? (
+            <div className="user-dropdown">
+              <p>{user?.name || "User"}</p>
+              <span>{user?.email || "-"}</span>
+              <strong>{roleName}</strong>
+              <button type="button" onClick={handleLogout}>
+                <LogOut size={16} />
+                Logout
+              </button>
+            </div>
+          ) : null}
         </div>
-        <NeumorphicButton className="logout-button" onClick={handleLogout}>
-          <LogOut size={17} />
-          Logout
-        </NeumorphicButton>
       </div>
     </header>
   )

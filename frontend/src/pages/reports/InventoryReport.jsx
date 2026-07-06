@@ -1,6 +1,7 @@
 import { Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import NeumorphicCard from "../../components/ui/NeumorphicCard"
+import { useToast } from "../../context/ToastContext"
 import AppLayout from "../../layouts/AppLayout"
 import api from "../../lib/api"
 
@@ -27,6 +28,7 @@ function formatNumber(value) {
 }
 
 function InventoryReport() {
+  const { showToast } = useToast()
   const [rows, setRows] = useState([])
   const [hubs, setHubs] = useState([])
   const [categories, setCategories] = useState([])
@@ -66,10 +68,11 @@ function InventoryReport() {
         const response = await api.get("/reports/inventory", { params })
         setRows(response.data?.data || [])
       } catch (fetchError) {
-        setError(
+        const message =
           fetchError.response?.data?.message ||
-            "Gagal memuat laporan persediaan.",
-        )
+          "Gagal memuat laporan persediaan."
+        setError(message)
+        showToast({ type: "error", message })
       } finally {
         setLoading(false)
       }

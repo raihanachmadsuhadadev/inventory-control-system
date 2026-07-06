@@ -1,39 +1,15 @@
-import {
-  BarChart3,
-  Boxes,
-  Building2,
-  CalendarClock,
-  ClipboardList,
-  Factory,
-  FileText,
-  Gauge,
-  LayoutDashboard,
-  Lightbulb,
-  Package,
-  Repeat,
-  Tags,
-  Users,
-} from "lucide-react"
+import { ClipboardList } from "lucide-react"
 import { NavLink } from "react-router-dom"
-
-const menuItems = [
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "User", to: "#", icon: Users },
-  { label: "Hub", to: "/hubs", icon: Building2 },
-  { label: "Kategori", to: "/categories", icon: Tags },
-  { label: "Shift", to: "/shifts", icon: CalendarClock },
-  { label: "Supplier", to: "/suppliers", icon: Factory },
-  { label: "Produk", to: "/products", icon: Package },
-  { label: "Inventaris", to: "/inventories", icon: Boxes },
-  { label: "Transaksi Stok", to: "/stock-transactions", icon: Repeat },
-  { label: "EOQ", to: "/eoq", icon: BarChart3 },
-  { label: "ROP", to: "/rop", icon: Gauge },
-  { label: "Rekomendasi", to: "/purchase-recommendations", icon: Lightbulb },
-  { label: "Laporan Persediaan", to: "/reports/inventory", icon: FileText },
-  { label: "Laporan EOQ & ROP", to: "/reports/eoq-rop", icon: FileText },
-]
+import { sidebarMenus } from "../../config/sidebarMenus"
+import { useAuth } from "../../context/AuthContext"
 
 function Sidebar() {
+  const { loading, user } = useAuth()
+  const roleSlug = user?.role?.slug
+  const visibleMenus = roleSlug
+    ? sidebarMenus.filter((item) => item.roles.includes(roleSlug))
+    : []
+
   return (
     <aside className="sidebar" aria-label="Menu utama">
       <div className="sidebar-brand">
@@ -47,21 +23,19 @@ function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {menuItems.map((item) => {
-          const Icon = item.icon
-          const isPlaceholder = item.to === "#"
+        {loading && !roleSlug ? (
+          <span className="sidebar-loading">Memuat menu...</span>
+        ) : null}
 
-          if (isPlaceholder) {
-            return (
-              <a key={item.label} className="sidebar-link" href={item.to}>
-                <Icon size={18} />
-                <span>{item.label}</span>
-              </a>
-            )
-          }
+        {!loading && visibleMenus.length === 0 ? (
+          <span className="sidebar-loading">Menu tidak tersedia</span>
+        ) : null}
+
+        {visibleMenus.map((item) => {
+          const Icon = item.icon
 
           return (
-            <NavLink key={item.label} className="sidebar-link" to={item.to}>
+            <NavLink key={item.label} className="sidebar-link" to={item.path}>
               <Icon size={18} />
               <span>{item.label}</span>
             </NavLink>

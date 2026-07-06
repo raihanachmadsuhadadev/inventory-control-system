@@ -1,9 +1,11 @@
-import { Calculator, Search } from "lucide-react"
+import { Calculator, Eye, Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import NeumorphicInput from "../components/ui/NeumorphicInput"
 import { useAuth } from "../context/AuthContext"
+import { useToast } from "../context/ToastContext"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -26,7 +28,9 @@ function formatNumber(value) {
 }
 
 function Rop() {
+  const navigate = useNavigate()
   const { user } = useAuth()
+  const { showToast } = useToast()
   const canCalculate = ["super_admin", "admin_gudang"].includes(user?.role?.slug)
   const [calculations, setCalculations] = useState([])
   const [products, setProducts] = useState([])
@@ -53,10 +57,11 @@ function Rop() {
       setProducts(productResponse.data?.data || [])
       setHubs(hubResponse.data?.data || [])
     } catch (fetchError) {
-      setError(
+      const message =
         fetchError.response?.data?.message ||
-          "Gagal memuat data perhitungan ROP.",
-      )
+        "Gagal memuat data perhitungan ROP."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setLoading(false)
     }
@@ -101,6 +106,7 @@ function Rop() {
 
       setLastResult(response.data?.data || null)
       setForm(initialForm)
+      showToast({ type: "success", message: "Perhitungan ROP berhasil disimpan." })
       await fetchData()
     } catch (saveError) {
       const validationErrors = saveError.response?.data?.errors
@@ -108,11 +114,12 @@ function Rop() {
         ? Object.values(validationErrors).flat()[0]
         : null
 
-      setError(
+      const message =
         firstValidationError ||
-          saveError.response?.data?.message ||
-          "Gagal menghitung ROP.",
-      )
+        saveError.response?.data?.message ||
+        "Gagal menghitung ROP."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setSaving(false)
     }
@@ -293,6 +300,7 @@ function Rop() {
                   <th>ROP</th>
                   <th>Status</th>
                   <th>Dihitung Oleh</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -308,6 +316,13 @@ function Rop() {
                     <td>{formatNumber(item.rop_result)}</td>
                     <td>{renderStatus(item.stock_status)}</td>
                     <td>{item.calculator?.name || "-"}</td>
+                    <td>
+                      <div className="table-actions">
+                        <button type="button" onClick={() => navigate(`/rop/${item.id}`)}>
+                          <Eye size={16} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -1,8 +1,10 @@
-import { Check, RefreshCw, Search, X } from "lucide-react"
+import { Check, Eye, RefreshCw, Search, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import { useAuth } from "../context/AuthContext"
+import { useToast } from "../context/ToastContext"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -23,7 +25,9 @@ function formatNumber(value) {
 }
 
 function PurchaseRecommendations() {
+  const navigate = useNavigate()
   const { user } = useAuth()
+  const { showToast } = useToast()
   const canGenerate = ["super_admin", "admin_gudang"].includes(user?.role?.slug)
   const canVerify = ["super_admin", "manager_gudang"].includes(user?.role?.slug)
   const [recommendations, setRecommendations] = useState([])
@@ -41,10 +45,11 @@ function PurchaseRecommendations() {
       const response = await api.get("/purchase-recommendations")
       setRecommendations(response.data?.data || [])
     } catch (fetchError) {
-      setError(
+      const message =
         fetchError.response?.data?.message ||
-          "Gagal memuat rekomendasi pemesanan.",
-      )
+        "Gagal memuat rekomendasi pemesanan."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setLoading(false)
     }
@@ -80,12 +85,14 @@ function PurchaseRecommendations() {
       setError("")
       const response = await api.post("/purchase-recommendations/generate")
       setSummary(response.data?.data || null)
+      showToast({ type: "success", message: "Rekomendasi berhasil digenerate." })
       await fetchRecommendations()
     } catch (generateError) {
-      setError(
+      const message =
         generateError.response?.data?.message ||
-          "Gagal generate rekomendasi pemesanan.",
-      )
+        "Gagal generate rekomendasi pemesanan."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setProcessing(false)
     }
@@ -109,12 +116,20 @@ function PurchaseRecommendations() {
       await api.put(`/purchase-recommendations/${item.id}/${action}`, {
         notes: note,
       })
+      showToast({
+        type: "success",
+        message:
+          action === "approve"
+            ? "Rekomendasi berhasil disetujui."
+            : "Rekomendasi berhasil ditolak.",
+      })
       await fetchRecommendations()
     } catch (verifyError) {
-      setError(
+      const message =
         verifyError.response?.data?.message ||
-          "Gagal memproses rekomendasi pemesanan.",
-      )
+        "Gagal memproses rekomendasi pemesanan."
+      setError(message)
+      showToast({ type: "error", message })
     } finally {
       setProcessing(false)
     }
@@ -219,8 +234,16 @@ function PurchaseRecommendations() {
                     <td>{item.verifier?.name || "-"}</td>
                     <td>{item.notes || "-"}</td>
                     <td>
-                      {canVerify && item.status === "pending" ? (
-                        <div className="table-actions">
+                      <div className="table-actions">
+                        <button
+                          aria-label={`Detail ${item.product?.name}`}
+                          onClick={() => navigate(`/purchase-recommendations/${item.id}`)}
+                          type="button"
+                        >
+                          <Eye size={16} />
+                        </button>
+                        {canVerify && item.status === "pending" ? (
+                          <>
                           <button
                             aria-label={`Setujui ${item.product?.name}`}
                             onClick={() => handleVerify(item, "approve")}
@@ -237,10 +260,9 @@ function PurchaseRecommendations() {
                           >
                             <X size={16} />
                           </button>
-                        </div>
-                      ) : (
-                        "-"
-                      )}
+                          </>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 ))}

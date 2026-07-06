@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import ProtectedRoute from "./components/auth/ProtectedRoute"
+import RoleRoute from "./components/auth/RoleRoute"
 import { useAuth } from "./context/AuthContext"
 import Categories from "./pages/Categories"
 import Dashboard from "./pages/Dashboard"
+import DetailPage from "./pages/DetailPage"
 import Eoq from "./pages/Eoq"
 import Hubs from "./pages/Hubs"
 import Inventories from "./pages/Inventories"
@@ -15,6 +17,7 @@ import Rop from "./pages/Rop"
 import Shifts from "./pages/Shifts"
 import StockTransactions from "./pages/StockTransactions"
 import Suppliers from "./pages/Suppliers"
+import UsersPlaceholder from "./pages/UsersPlaceholder"
 
 function App() {
   const { isAuthenticated, loading } = useAuth()
@@ -25,6 +28,11 @@ function App() {
     </main>
   ) : (
     <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
+  )
+  const superAdminOnly = (children) => (
+    <ProtectedRoute>
+      <RoleRoute roles={["super_admin"]}>{children}</RoleRoute>
+    </ProtectedRoute>
   )
 
   return (
@@ -46,28 +54,20 @@ function App() {
       />
       <Route
         path="/categories"
-        element={
-          <ProtectedRoute>
-            <Categories />
-          </ProtectedRoute>
-        }
+        element={superAdminOnly(<Categories />)}
       />
+      <Route path="/categories/:id" element={superAdminOnly(<DetailPage type="category" />)} />
       <Route
         path="/hubs"
-        element={
-          <ProtectedRoute>
-            <Hubs />
-          </ProtectedRoute>
-        }
+        element={superAdminOnly(<Hubs />)}
       />
+      <Route path="/hubs/:id" element={superAdminOnly(<DetailPage type="hub" />)} />
       <Route
         path="/shifts"
-        element={
-          <ProtectedRoute>
-            <Shifts />
-          </ProtectedRoute>
-        }
+        element={superAdminOnly(<Shifts />)}
       />
+      <Route path="/shifts/:id" element={superAdminOnly(<DetailPage type="shift" />)} />
+      <Route path="/users" element={superAdminOnly(<UsersPlaceholder />)} />
       <Route
         path="/suppliers"
         element={
@@ -76,6 +76,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/suppliers/:id" element={<ProtectedRoute><DetailPage type="supplier" /></ProtectedRoute>} />
       <Route
         path="/products"
         element={
@@ -84,6 +85,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/products/:id" element={<ProtectedRoute><DetailPage type="product" /></ProtectedRoute>} />
       <Route
         path="/inventories"
         element={
@@ -92,6 +94,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/inventories/:id" element={<ProtectedRoute><DetailPage type="inventory" /></ProtectedRoute>} />
       <Route
         path="/stock-transactions"
         element={
@@ -100,6 +103,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/stock-transactions/:id" element={<ProtectedRoute><DetailPage type="stockTransaction" /></ProtectedRoute>} />
       <Route
         path="/eoq"
         element={
@@ -108,6 +112,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/eoq/:id" element={<ProtectedRoute><DetailPage type="eoq" /></ProtectedRoute>} />
       <Route
         path="/rop"
         element={
@@ -116,6 +121,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/rop/:id" element={<ProtectedRoute><DetailPage type="rop" /></ProtectedRoute>} />
       <Route
         path="/purchase-recommendations"
         element={
@@ -124,6 +130,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/purchase-recommendations/:id" element={<ProtectedRoute><DetailPage type="recommendation" /></ProtectedRoute>} />
       <Route
         path="/reports/inventory"
         element={

@@ -33,6 +33,9 @@ function Suppliers() {
       title="Supplier"
       subtitle="Kelola pemasok dan lead time sebagai fondasi perhitungan ROP."
       endpoint="/suppliers"
+      detailBasePath="/suppliers"
+      templateUrl="/suppliers/template"
+      importUrl="/suppliers/import"
       fields={fields}
       columns={columns}
       manageRoles={["super_admin", "admin_gudang"]}
