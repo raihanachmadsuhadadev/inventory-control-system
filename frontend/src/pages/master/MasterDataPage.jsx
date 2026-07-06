@@ -11,6 +11,8 @@ import Modal from "../../components/ui/Modal"
 import NeumorphicButton from "../../components/ui/NeumorphicButton"
 import NeumorphicCard from "../../components/ui/NeumorphicCard"
 import NeumorphicInput from "../../components/ui/NeumorphicInput"
+import Pagination from "../../components/ui/Pagination"
+import usePagination from "../../hooks/usePagination"
 
 const emptyForm = (fields) =>
   fields.reduce(
@@ -74,6 +76,10 @@ function MasterDataPage({
       }),
     )
   }, [columns, items, search])
+  const { paginatedItems, paginationProps } = usePagination(filteredItems, [
+    search,
+    endpoint,
+  ])
 
   const fetchItems = async () => {
     try {
@@ -309,7 +315,7 @@ function MasterDataPage({
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredItems.map((item) => (
+                  {paginatedItems.map((item) => (
                     <tr key={item.id}>
                       {columns.map((column) => (
                         <td key={column.key}>
@@ -362,6 +368,7 @@ function MasterDataPage({
                   ))}
                 </tbody>
               </table>
+              <Pagination {...paginationProps} />
             </div>
           )}
         </NeumorphicCard>

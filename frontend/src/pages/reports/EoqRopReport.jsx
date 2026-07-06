@@ -1,7 +1,9 @@
 import { Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import NeumorphicCard from "../../components/ui/NeumorphicCard"
+import Pagination from "../../components/ui/Pagination"
 import { useToast } from "../../context/ToastContext"
+import usePagination from "../../hooks/usePagination"
 import AppLayout from "../../layouts/AppLayout"
 import api from "../../lib/api"
 
@@ -71,6 +73,10 @@ function EoqRopReport() {
         .includes(keyword),
     )
   }, [rows, search])
+  const { paginatedItems: paginatedRows, paginationProps } = usePagination(
+    filteredRows,
+    [search],
+  )
 
   return (
     <AppLayout>
@@ -118,7 +124,7 @@ function EoqRopReport() {
                 </tr>
               </thead>
               <tbody>
-                {filteredRows.map((row) => (
+                {paginatedRows.map((row) => (
                   <tr key={row.product?.id}>
                     <td>{row.product?.name || "-"}</td>
                     <td>{formatNumber(row.latest_eoq?.eoq_result)}</td>
@@ -131,6 +137,7 @@ function EoqRopReport() {
                 ))}
               </tbody>
             </table>
+            <Pagination {...paginationProps} />
           </div>
         )}
       </NeumorphicCard>

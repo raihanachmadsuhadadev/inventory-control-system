@@ -135,7 +135,7 @@ function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {criticalStocks.map((item) => (
+                  {criticalStocks.slice(0, 5).map((item) => (
                     <tr key={item.id}>
                       <td>{item.product?.name || "-"}</td>
                       <td>{item.product?.category?.name || "-"}</td>
@@ -168,7 +168,7 @@ function Dashboard() {
             <div className="empty-state">Tidak ada rekomendasi pending.</div>
           ) : (
             <div className="recommendation-list">
-              {recommendations.map((item) => (
+              {recommendations.slice(0, 5).map((item) => (
                 <article key={item.id} className="recommendation-item">
                   <h3>{item.product?.name || "-"}</h3>
                   <p className="neo-card-muted">

@@ -3,8 +3,10 @@ import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
+import Pagination from "../components/ui/Pagination"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
+import usePagination from "../hooks/usePagination"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -78,6 +80,8 @@ function PurchaseRecommendations() {
       return matchesStatus && (!keyword || searchable.includes(keyword))
     })
   }, [recommendations, search, status])
+  const { paginatedItems: paginatedRecommendations, paginationProps } =
+    usePagination(filteredRecommendations, [search, status])
 
   const handleGenerate = async () => {
     try {
@@ -222,7 +226,7 @@ function PurchaseRecommendations() {
                 </tr>
               </thead>
               <tbody>
-                {filteredRecommendations.map((item) => (
+                {paginatedRecommendations.map((item) => (
                   <tr key={item.id}>
                     <td>{new Date(item.created_at).toLocaleString("id-ID")}</td>
                     <td>{item.product?.name || "-"}</td>
@@ -268,6 +272,7 @@ function PurchaseRecommendations() {
                 ))}
               </tbody>
             </table>
+            <Pagination {...paginationProps} />
           </div>
         )}
       </NeumorphicCard>

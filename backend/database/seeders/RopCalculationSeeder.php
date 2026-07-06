@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Hub;
 use App\Models\Inventory;
-use App\Models\Product;
 use App\Models\RopCalculation;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -16,45 +14,58 @@ class RopCalculationSeeder extends Seeder
      */
     public function run(): void
     {
-        $hub = Hub::query()->where('code', 'HUB-PST')->first();
         $user = User::query()->where('email', 'superadmin@inventory.test')->first();
+        $inventories = Inventory::query()
+            ->with(['product.supplier', 'hub'])
+            ->whereHas('product')
+            ->whereHas('hub')
+            ->get();
 
-        if (! $hub) {
+        if ($inventories->isEmpty()) {
             return;
         }
 
-        $samples = [
-            ['code' => 'PRD-KOPI-001', 'daily_demand' => 10, 'lead_time_days' => 5, 'safety_stock' => 20],
-            ['code' => 'PRD-CUP-012', 'daily_demand' => 35, 'lead_time_days' => 3, 'safety_stock' => 40],
-            ['code' => 'PRD-SUSU-001', 'daily_demand' => 8, 'lead_time_days' => 4, 'safety_stock' => 12],
+        $dailyDemand = [
+            'PRD-KOPI-001' => 11,
+            'PRD-KOPI-002' => 9,
+            'PRD-GULA-001' => 8,
+            'PRD-SYRUP-001' => 12,
+            'PRD-CUP-012' => 42,
+            'PRD-CUP-016' => 36,
+            'PRD-LID-012' => 48,
+            'PRD-PAPERBAG-001' => 21,
+            'PRD-SUSU-001' => 13,
+            'PRD-CREAMER-001' => 10,
+            'PRD-MATCHA-001' => 6,
+            'PRD-TEA-001' => 5,
+            'PRD-FRZ-001' => 8,
+            'PRD-FRZ-002' => 7,
+            'PRD-CLEAN-001' => 3,
+            'PRD-CLEAN-002' => 4,
+            'PRD-EQUIP-001' => 11,
+            'PRD-SPR-001' => 1,
         ];
 
-        foreach ($samples as $sample) {
-            $product = Product::query()->where('code', $sample['code'])->first();
-
-            if (! $product) {
-                continue;
-            }
-
-            $currentStock = Inventory::query()
-                ->where('product_id', $product->id)
-                ->where('hub_id', $hub->id)
-                ->value('current_stock') ?? 0;
-            $ropResult = ($sample['daily_demand'] * $sample['lead_time_days']) + $sample['safety_stock'];
-            $stockStatus = $currentStock <= $product->minimum_stock
+        foreach ($inventories as $inventory) {
+            $product = $inventory->product;
+            $demand = $dailyDemand[$product->code] ?? max((int) ceil($product->minimum_stock / 3), 1);
+            $leadTime = $product->supplier?->lead_time_days ?? 4;
+            $safetyStock = max((int) ceil($product->minimum_stock * 0.6), 4);
+            $ropResult = ($demand * $leadTime) + $safetyStock;
+            $stockStatus = $inventory->current_stock <= $product->minimum_stock
                 ? 'critical'
-                : ($currentStock <= $ropResult ? 'reorder' : 'safe');
+                : ($inventory->current_stock <= $ropResult ? 'reorder' : 'safe');
 
-            RopCalculation::firstOrCreate(
+            RopCalculation::updateOrCreate(
                 [
-                    'product_id' => $product->id,
-                    'hub_id' => $hub->id,
-                    'daily_demand' => $sample['daily_demand'],
-                    'lead_time_days' => $sample['lead_time_days'],
-                    'safety_stock' => $sample['safety_stock'],
+                    'product_id' => $inventory->product_id,
+                    'hub_id' => $inventory->hub_id,
+                    'daily_demand' => $demand,
+                    'lead_time_days' => $leadTime,
+                    'safety_stock' => $safetyStock,
                 ],
                 [
-                    'current_stock' => $currentStock,
+                    'current_stock' => $inventory->current_stock,
                     'rop_result' => $ropResult,
                     'stock_status' => $stockStatus,
                     'calculated_by' => $user?->id,

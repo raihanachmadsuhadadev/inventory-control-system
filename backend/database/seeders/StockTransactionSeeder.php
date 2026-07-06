@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Hub;
 use App\Models\Inventory;
-use App\Models\Product;
 use App\Models\StockTransaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -16,49 +14,62 @@ class StockTransactionSeeder extends Seeder
      */
     public function run(): void
     {
-        $hub = Hub::query()->where('code', 'HUB-PST')->first();
         $user = User::query()->where('email', 'superadmin@inventory.test')->first();
+        $inventories = Inventory::query()
+            ->with(['product', 'hub'])
+            ->whereHas('product')
+            ->whereHas('hub')
+            ->get();
 
-        if (! $hub) {
+        if ($inventories->isEmpty()) {
             return;
         }
 
-        $transactions = [
-            ['code' => 'PRD-KOPI-001', 'quantity' => 35, 'notes' => 'Stok awal kopi arabica'],
-            ['code' => 'PRD-CUP-012', 'quantity' => 150, 'notes' => 'Stok awal cup paper'],
-            ['code' => 'PRD-SUSU-001', 'quantity' => 18, 'notes' => 'Stok awal susu UHT'],
-        ];
+        foreach ($inventories as $inventory) {
+            $initialIn = $inventory->current_stock + max((int) ceil($inventory->current_stock * 0.32), 6);
+            $outQuantity = max((int) ceil($inventory->current_stock * 0.18), 2);
+            $stockAfterOut = max($initialIn - $outQuantity, 0);
 
-        foreach ($transactions as $transaction) {
-            $product = Product::query()->where('code', $transaction['code'])->first();
-
-            if (! $product) {
-                continue;
-            }
-
-            $inventory = Inventory::query()
-                ->where('product_id', $product->id)
-                ->where('hub_id', $hub->id)
-                ->first();
-
-            if (! $inventory) {
-                continue;
-            }
-
-            StockTransaction::firstOrCreate(
+            $rows = [
                 [
-                    'product_id' => $product->id,
-                    'hub_id' => $hub->id,
                     'type' => 'in',
-                    'notes' => $transaction['notes'],
+                    'quantity' => $initialIn,
+                    'stock_before' => 0,
+                    'stock_after' => $initialIn,
+                    'notes' => 'Stok awal '.$inventory->product->name.' di '.$inventory->hub->name,
                 ],
                 [
-                    'quantity' => $transaction['quantity'],
-                    'stock_before' => 0,
-                    'stock_after' => $inventory->current_stock,
-                    'created_by' => $user?->id,
+                    'type' => 'out',
+                    'quantity' => $outQuantity,
+                    'stock_before' => $initialIn,
+                    'stock_after' => $stockAfterOut,
+                    'notes' => 'Distribusi rutin '.$inventory->product->name.' dari '.$inventory->hub->name,
                 ],
-            );
+                [
+                    'type' => 'adjustment',
+                    'quantity' => $inventory->current_stock,
+                    'stock_before' => $stockAfterOut,
+                    'stock_after' => $inventory->current_stock,
+                    'notes' => 'Penyesuaian hasil stock opname '.$inventory->product->name.' di '.$inventory->hub->name,
+                ],
+            ];
+
+            foreach ($rows as $row) {
+                StockTransaction::updateOrCreate(
+                    [
+                        'product_id' => $inventory->product_id,
+                        'hub_id' => $inventory->hub_id,
+                        'type' => $row['type'],
+                        'notes' => $row['notes'],
+                    ],
+                    [
+                        'quantity' => $row['quantity'],
+                        'stock_before' => $row['stock_before'],
+                        'stock_after' => $row['stock_after'],
+                        'created_by' => $user?->id,
+                    ],
+                );
+            }
         }
     }
 }

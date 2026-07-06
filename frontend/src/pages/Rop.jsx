@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom"
 import NeumorphicButton from "../components/ui/NeumorphicButton"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import NeumorphicInput from "../components/ui/NeumorphicInput"
+import Pagination from "../components/ui/Pagination"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
+import usePagination from "../hooks/usePagination"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -85,6 +87,8 @@ function Rop() {
         .includes(keyword),
     )
   }, [calculations, search])
+  const { paginatedItems: paginatedCalculations, paginationProps } =
+    usePagination(filteredCalculations, [search])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -304,7 +308,7 @@ function Rop() {
                 </tr>
               </thead>
               <tbody>
-                {filteredCalculations.map((item) => (
+                {paginatedCalculations.map((item) => (
                   <tr key={item.id}>
                     <td>{new Date(item.calculated_at).toLocaleString("id-ID")}</td>
                     <td>{item.product?.name || "-"}</td>
@@ -327,6 +331,7 @@ function Rop() {
                 ))}
               </tbody>
             </table>
+            <Pagination {...paginationProps} />
           </div>
         )}
       </NeumorphicCard>

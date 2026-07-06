@@ -5,8 +5,10 @@ import NeumorphicButton from "../components/ui/NeumorphicButton"
 import ImportModal from "../components/ui/ImportModal"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
 import NeumorphicInput from "../components/ui/NeumorphicInput"
+import Pagination from "../components/ui/Pagination"
 import { useAuth } from "../context/AuthContext"
 import { useToast } from "../context/ToastContext"
+import usePagination from "../hooks/usePagination"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -94,6 +96,8 @@ function StockTransactions() {
         .includes(keyword),
     )
   }, [search, transactions])
+  const { paginatedItems: paginatedTransactions, paginationProps } =
+    usePagination(filteredTransactions, [search])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -323,7 +327,7 @@ function StockTransactions() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTransactions.map((item) => (
+                  {paginatedTransactions.map((item) => (
                     <tr key={item.id}>
                       <td>{new Date(item.created_at).toLocaleString("id-ID")}</td>
                       <td>{item.product?.name || "-"}</td>
@@ -345,6 +349,7 @@ function StockTransactions() {
                   ))}
                 </tbody>
               </table>
+              <Pagination {...paginationProps} />
             </div>
           )}
         </NeumorphicCard>

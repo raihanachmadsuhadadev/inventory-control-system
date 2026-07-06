@@ -2,7 +2,9 @@ import { Eye, Search } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import NeumorphicCard from "../components/ui/NeumorphicCard"
+import Pagination from "../components/ui/Pagination"
 import { useToast } from "../context/ToastContext"
+import usePagination from "../hooks/usePagination"
 import AppLayout from "../layouts/AppLayout"
 import api from "../lib/api"
 
@@ -65,6 +67,8 @@ function Inventories() {
       return matchesHub && (!keyword || searchable.includes(keyword))
     })
   }, [hubId, inventories, search])
+  const { paginatedItems: paginatedInventories, paginationProps } =
+    usePagination(filteredInventories, [search, hubId])
 
   return (
     <AppLayout>
@@ -127,7 +131,7 @@ function Inventories() {
                 </tr>
               </thead>
               <tbody>
-                {filteredInventories.map((item) => {
+                {paginatedInventories.map((item) => {
                   const status = stockStatus(item)
 
                   return (
@@ -165,6 +169,7 @@ function Inventories() {
                 })}
               </tbody>
             </table>
+            <Pagination {...paginationProps} />
           </div>
         )}
       </NeumorphicCard>

@@ -1,4 +1,4 @@
-import { ClipboardList } from "lucide-react"
+import { Package2 } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import { sidebarMenus } from "../../config/sidebarMenus"
 import { useAuth } from "../../context/AuthContext"
@@ -14,7 +14,7 @@ function Sidebar() {
     <aside className="sidebar" aria-label="Menu utama">
       <div className="sidebar-brand">
         <div className="brand-mark">
-          <ClipboardList size={24} strokeWidth={2.3} />
+          <Package2 size={24} strokeWidth={2.3} />
         </div>
         <div>
           <p className="brand-title">Inventory</p>
