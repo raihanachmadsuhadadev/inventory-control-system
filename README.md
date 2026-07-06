@@ -190,58 +190,58 @@ inventory-eoq-rop/
 ## Screenshots
 
 ### Login Page
-![Login Page](docs/screenshots/01-login-page.png)
+![Login Page](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/01-login-page.png)
 
 ### Dashboard
-![Dashboard](docs/screenshots/02-dashboard.png)
+![Dashboard](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/02-dashboard.png)
 
 ### Sidebar Super Admin
-![Sidebar Super Admin](docs/screenshots/03-sidebar-super-admin.png)
+![Sidebar Super Admin](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/03-sidebar-super-admin.png)
 
 ### Sidebar Admin Gudang
-![Sidebar Admin Gudang](docs/screenshots/04-sidebar-admin-gudang.png)
+![Sidebar Admin Gudang](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/04-sidebar-admin-gudang.png)
 
 ### Sidebar Manager Gudang
-![Sidebar Manager Gudang](docs/screenshots/05-sidebar-manager-gudang.png)
+![Sidebar Manager Gudang](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/05-sidebar-manager-gudang.png)
 
 ### Product Management
-![Product Management](docs/screenshots/06-products-table.png)
+![Product Management](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/06-products-table.png)
 
 ### Product Modal
-![Product Modal](docs/screenshots/07-product-modal.png)
+![Product Modal](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/07-product-modal.png)
 
 ### Product Detail
-![Product Detail](docs/screenshots/08-product-detail.png)
+![Product Detail](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/08-product-detail.png)
 
 ### Supplier Management
-![Supplier Management](docs/screenshots/09-suppliers-table.png)
+![Supplier Management](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/09-suppliers-table.png)
 
 ### Inventory Table
-![Inventory Table](docs/screenshots/10-inventories-table.png)
+![Inventory Table](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/10-inventories-table.png)
 
 ### Stock Transactions
-![Stock Transactions](docs/screenshots/11-stock-transactions.png)
+![Stock Transactions](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/11-stock-transactions.png)
 
 ### EOQ Calculation
-![EOQ Calculation](docs/screenshots/12-eoq-calculation.png)
+![EOQ Calculation](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/12-eoq-calculation.png)
 
 ### ROP Calculation
-![ROP Calculation](docs/screenshots/13-rop-calculation.png)
+![ROP Calculation](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/13-rop-calculation.png)
 
 ### Purchase Recommendations
-![Purchase Recommendations](docs/screenshots/14-purchase-recommendations.png)
+![Purchase Recommendations](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/14-purchase-recommendations.png)
 
 ### Inventory Report
-![Inventory Report](docs/screenshots/15-inventory-report.png)
+![Inventory Report](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/15-inventory-report.png)
 
 ### Import Excel Modal
-![Import Excel Modal](docs/screenshots/16-import-excel-modal.png)
+![Import Excel Modal](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/16-import-excel-modal.png)
 
 ### Toast Notification
-![Toast Notification](docs/screenshots/17-toast-notification.png)
+![Toast Notification](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/17-toast-notification.png)
 
 ### Confirm Delete
-![Confirm Delete](docs/screenshots/18-confirm-delete.png)
+![Confirm Delete](https://raw.githubusercontent.com/raihanachmadsuhadadev/inventory-eoq-rop/main/docs/screenshots/18-confirm-delete.png)
 
 ## Persiapan Environment
 
