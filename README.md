@@ -257,7 +257,7 @@ Berikut adalah tampilan fitur utama dalam Inventory Control System.
 
 ### ROP Calculation
 
-![ROP Calculation](./docs/screenshots/q0-rop-calculation-list.png)
+![ROP Calculation](./docs/screenshots/10-rop-calculation-list.png)
 
 ### Purchase Recommendations
 
