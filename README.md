@@ -10,13 +10,13 @@ Project ini menerapkan arsitektur backend dan frontend yang terpisah:
 
 ## Ringkasan Sistem
 
-Sistem ini dikembangkan sebagai business inventory management case study yang mendukung proses kontrol persediaan secara terstruktur. Data master hub, kategori, shift, supplier, dan produk menjadi dasar pengelolaan inventaris. Setiap perubahan stok dicatat melalui transaksi masuk, keluar, atau adjustment sehingga posisi stok per hub dapat dipantau secara konsisten.
+Sistem ini mendukung proses kontrol persediaan bisnis secara terstruktur. Data master hub, kategori, shift, supplier, dan produk menjadi dasar pengelolaan inventaris. Setiap perubahan stok dicatat melalui transaksi masuk, keluar, atau adjustment sehingga posisi stok per hub dapat dipantau secara konsisten.
 
 Fitur stock planning calculation menggunakan EOQ dan ROP untuk mendukung purchase recommendation berdasarkan stok aktual. Dashboard dan laporan membantu pengguna memantau kondisi persediaan serta item kritis, sedangkan role-based access memastikan menu dan tindakan tersedia sesuai tanggung jawab pengguna.
 
-## My Role
+## Developer Role
 
-Saya bertanggung jawab mengembangkan dan mendokumentasikan project ini sebagai portfolio case study, dengan cakupan pekerjaan:
+Tanggung jawab pengembangan dalam project ini meliputi:
 
 - Menganalisis alur kontrol persediaan dan peran pengguna.
 - Merancang struktur aplikasi dengan pemisahan backend dan frontend.
@@ -24,11 +24,11 @@ Saya bertanggung jawab mengembangkan dan mendokumentasikan project ini sebagai p
 - Membangun halaman frontend dan alur UI menggunakan React, Vite, Axios, React Router, serta custom UI components.
 - Mengimplementasikan role-based access untuk Super Admin, Admin Gudang, dan Manager Gudang.
 - Mengembangkan fitur produk, supplier, hub, inventaris, transaksi stok, stock planning calculation, rekomendasi, laporan, dan import Excel.
-- Menyiapkan akun demo, screenshot, dan dokumentasi README untuk kebutuhan presentasi portfolio.
+- Menyiapkan akun demo, screenshot, dan dokumentasi project.
 
 ## Project Status
 
-Project ini telah selesai dikembangkan sebagai portfolio case study dan saat ini dipelihara sebagai project portfolio publik di GitHub. Pengembangan berikutnya dapat mencakup export PDF/Excel, visualisasi dashboard yang lebih lanjut, audit log, permission yang lebih granular, automated testing, persiapan deployment, serta penyempurnaan UI/UX.
+Sistem ini telah selesai dikembangkan sebagai aplikasi kontrol persediaan berbasis web. Project dapat dikembangkan lebih lanjut dengan penambahan fitur pelaporan, visualisasi dashboard, audit log, permission yang lebih granular, automated testing, konfigurasi deployment, serta penyempurnaan UI/UX.
 
 ## Tech Stack
 
